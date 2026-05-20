@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>thungkradasgiveaway</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── DARK THEME ── */
+[data-theme="dark"]{
+  --bg:#040a14; --surface:#071220; --surface2:#0b1a2e; --surface3:#102338;
+  --border:rgba(80,160,255,0.08); --border2:rgba(80,160,255,0.18);
+  --text:#ddeeff; --text2:#6899bb; --text3:#2a4a66;
+  --accent:#4fa3e8; --accent2:#7ec8ff; --glow:rgba(79,163,232,0.13);
+  --red:#e05575; --nav-bg:rgba(4,10,20,0.88);
+  --stars:1; --card-bg:rgba(7,18,32,0.85);
+}
+/* ── LIGHT THEME ── */
+[data-theme="light"]{
+  --bg:#eef4ff; --surface:#ffffff; --surface2:#f0f6ff; --surface3:#ddeeff;
+  --border:rgba(30,100,200,0.1); --border2:rgba(30,100,200,0.2);
+  --text:#0a1a3a; --text2:#2a5a9a; --text3:#6a9acc;
+  --accent:#1a6abf; --accent2:#1050a0; --glow:rgba(30,100,200,0.1);
+  --red:#c03050; --nav-bg:rgba(238,244,255,0.92);
+  --stars:0; --card-bg:#ffffff;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Prompt',sans-serif;font-weight:300;}
+body{background:var(--bg);color:var(--text);overflow-x:hidden;position:relative;transition:background 0.3s,color 0.3s;}
+
+/* stars — dark only */
+[data-theme="dark"] body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 25% 40%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 38% 8%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 52% 55%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 65% 22%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 73% 70%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 83% 12%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 90% 48%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 15% 80%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 44% 90%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 60% 85%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 78% 93%,rgba(255,255,255,0.85) 0%,transparent 100%),
+    radial-gradient(2px 2px at 30% 60%,rgba(100,180,255,0.6) 0%,transparent 100%),
+    radial-gradient(2px 2px at 70% 35%,rgba(100,180,255,0.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 48% 25%,rgba(200,230,255,0.9) 0%,transparent 100%);
+  opacity:0.65;
+}
+[data-theme="dark"] body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(20,80,160,0.22) 0%,transparent 60%);
+}
+
+.nav,.page,.s-section,.r-form,.r-preview,.receipt{position:relative;z-index:1;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:4px;}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:54px;display:flex;align-items:center;gap:6px;padding:0 16px;
+  background:var(--nav-bg);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);transition:background 0.3s;
+}
+.nav-spacer{flex:1;}
+.nav-tab{
+  padding:6px 13px;border-radius:8px;font-family:'Prompt',sans-serif;
+  font-size:13px;font-weight:300;cursor:pointer;border:none;transition:all 0.2s;
+}
+.nav-tab.on{background:var(--accent);color:#fff;font-weight:500;}
+.nav-tab.off{background:transparent;color:var(--text2);border:1px solid var(--border2);}
+.nav-tab.off:hover{color:var(--text);border-color:var(--accent);}
+
+.theme-btn{
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text2);cursor:pointer;
+  font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.theme-btn:hover{border-color:var(--accent);color:var(--text);}
+
+.save-img-btn{
+  padding:6px 13px;border-radius:8px;font-family:'Prompt',sans-serif;
+  font-size:13px;font-weight:400;cursor:pointer;border:none;
+  background:var(--surface3);color:var(--accent2);
+  border:1px solid var(--border2);transition:all 0.2s;
+}
+.save-img-btn:hover{border-color:var(--accent);}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:54px;min-height:100vh;}
+.page.on{display:block;}
+
+/* ── SETTINGS ── */
+.settings-wrap{max-width:640px;margin:0 auto;padding:28px 14px 80px;}
+.s-section{
+  background:var(--card-bg);border:1px solid var(--border2);
+  border-radius:14px;padding:22px;margin-bottom:12px;
+  box-shadow:0 2px 20px rgba(0,0,0,0.15);
+  transition:background 0.3s,border-color 0.3s;
+}
+.s-title{
+  font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:16px;padding-bottom:8px;
+  border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:7px;
+}
+.s-title::before{content:'★';font-size:9px;}
+
+label{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:300;}
+input[type=text],input[type=number],input[type=tel],input[type=color],textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text);padding:9px 13px;border-radius:9px;
+  font-family:'Prompt',sans-serif;font-size:14px;font-weight:300;
+  margin-bottom:12px;transition:all 0.2s;outline:none;
+}
+input[type=color]{padding:3px 5px;height:36px;cursor:pointer;}
+input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow);}
+textarea{resize:vertical;min-height:56px;line-height:1.6;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+
+/* Upload zone */
+.upload-zone{
+  border:1.5px dashed var(--border2);border-radius:10px;
+  padding:18px;text-align:center;cursor:pointer;
+  transition:all 0.2s;position:relative;background:var(--surface2);
+  margin-bottom:8px;
+}
+.upload-zone:hover{border-color:var(--accent);background:var(--surface3);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-zone .uico{font-size:24px;margin-bottom:5px;}
+.upload-zone p{font-size:12px;color:var(--text2);line-height:1.6;}
+.img-preview-wrap{text-align:center;margin:6px 0 10px;}
+.img-preview-wrap img{max-width:120px;max-height:90px;object-fit:contain;border-radius:8px;border:1px solid var(--border2);display:none;}
+.clear-img-btn{display:none;background:none;border:none;color:var(--red);font-size:11px;cursor:pointer;font-family:'Prompt',sans-serif;margin-bottom:8px;padding:2px 0;}
+
+.save-btn{
+  width:100%;padding:13px;background:var(--accent);
+  color:#fff;border:none;border-radius:11px;
+  font-family:'Prompt',sans-serif;font-size:15px;font-weight:500;
+  cursor:pointer;transition:all 0.2s;margin-top:4px;
+}
+.save-btn:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 4px 20px var(--glow);}
+.save-ok{display:none;align-items:center;gap:8px;background:var(--glow);color:var(--accent2);padding:9px 14px;border-radius:9px;font-size:13px;margin-top:8px;border:1px solid var(--border2);}
+
+/* color row */
+.color-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.color-row label{margin-bottom:0;min-width:80px;font-size:11px;}
+.color-row input[type=color]{width:40px;height:32px;margin-bottom:0;border-radius:6px;flex-shrink:0;padding:2px 4px;}
+
+/* ── RECEIPT FORM ── */
+.r-wrap{display:flex;min-height:calc(100vh - 54px);}
+.r-form{
+  width:330px;min-width:330px;background:var(--card-bg);
+  border-right:1px solid var(--border2);
+  padding:20px 16px;overflow-y:auto;min-height:calc(100vh - 54px);
+  transition:background 0.3s;
+}
+.r-form-section{margin-bottom:20px;}
+.r-section-title{
+  font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;padding-bottom:6px;
+  border-bottom:1px solid var(--border);
+}
+.items-list{display:flex;flex-direction:column;gap:6px;}
+.item-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:9px;padding:9px 9px 3px;position:relative;
+  animation:up 0.15s ease;
+}
+@keyframes up{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.item-card input{margin-bottom:6px;background:var(--surface3)!important;border-color:var(--border)!important;}
+.rm-btn{position:absolute;top:7px;right:7px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;transition:color 0.2s;}
+.rm-btn:hover{color:var(--red);}
+.add-btn{width:100%;padding:7px;background:transparent;border:1px dashed var(--border2);border-radius:7px;color:var(--accent);font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;margin-top:6px;transition:all 0.2s;}
+.add-btn:hover{background:var(--glow);}
+.reset-btn{width:100%;padding:9px;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;margin-top:7px;}
+.reset-btn:hover{color:var(--red);border-color:var(--red);}
+
+.qr-toggle-row{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;user-select:none;}
+.qr-toggle-row:hover{border-color:var(--accent);}
+.qr-toggle-label{font-size:13px;color:var(--text2);font-weight:300;flex:1;}
+.toggle-switch{width:36px;height:19px;background:var(--surface3);border-radius:20px;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-switch.active{background:var(--accent);}
+.toggle-switch::after{content:'';position:absolute;top:2.5px;left:2.5px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform 0.2s;}
+.toggle-switch.active::after{transform:translateX(17px);}
+
+/* ── PREVIEW ── */
+.r-preview{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:32px 20px 60px;overflow-y:auto;}
+.r-preview-wrap{width:100%;max-width:420px;}
+.preview-lbl{text-align:center;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:14px;font-weight:300;}
+
+/* ── THE RECEIPT ── */
+.receipt{
+  background:#fff;border-radius:4px;
+  padding:34px 32px 26px;position:relative;
+  font-size:12.5px;color:#333;
+  box-shadow:0 20px 56px rgba(0,0,0,0.3);
+  font-family:'Prompt',sans-serif;font-weight:300;
+}
+.rh{text-align:center;margin-bottom:16px;}
+.rh-logo{max-height:80px;max-width:200px;object-fit:contain;margin-bottom:8px;display:none;}
+.rh-name{font-size:22px;font-weight:600;line-height:1.2;}
+.rh-brand{font-size:11px;font-weight:400;letter-spacing:1.5px;margin-top:2px;}
+.rh-phone{font-size:11px;color:#aaa;margin-top:2px;}
+.rdiv{border:none;border-top:1px dashed #e0e0e0;margin:12px 0;}
+.rmeta{display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-bottom:3px;font-weight:300;}
+.rmeta span:last-child{font-weight:400;color:#555;}
+.r-disclaimer{font-size:10.5px;line-height:1.75;text-align:center;padding:4px 0;font-weight:300;}
+.r-cust-lbl{font-size:9px;color:#bbb;text-transform:uppercase;letter-spacing:1.5px;font-weight:400;}
+.r-cust-name{font-size:15px;font-weight:500;margin-top:2px;margin-bottom:10px;}
+.r-table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:12px;}
+.r-table th{font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:#bbb;font-weight:400;padding:2px 0 6px;border-bottom:1px solid #eee;text-align:left;}
+.r-table th:last-child{text-align:right;}
+.r-table td{padding:5px 0;border-bottom:1px solid #f5f5f5;vertical-align:top;}
+.r-table td:last-child{text-align:right;font-weight:400;}
+.r-sub{font-size:10px;color:#bbb;margin-top:1px;}
+.r-totals{margin-top:4px;}
+.r-trow{display:flex;justify-content:space-between;font-size:11.5px;color:#aaa;padding:3px 0;font-weight:300;}
+.r-trow.grand{font-size:18px;font-weight:600;padding:9px 0 4px;border-top:2px solid #eee;margin-top:4px;}
+.r-qr-block{text-align:center;margin-top:14px;padding-top:12px;border-top:1px dashed #e0e0e0;}
+.r-qr-lbl{font-size:11px;font-weight:400;color:#666;margin-bottom:8px;}
+.r-qr-img{max-width:148px;border-radius:8px;border:4px solid #fff;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
+.r-qr-ph{width:120px;height:120px;background:#f9f9f9;border:1.5px dashed #ddd;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#ccc;flex-direction:column;gap:4px;}
+.r-qr-info{margin-top:8px;font-size:11.5px;color:#555;line-height:1.8;font-weight:300;}
+.r-wallet{font-weight:500;font-size:13px;}
+.r-fee{font-size:9.5px;color:#bbb;font-weight:300;margin-top:1px;}
+.r-note{text-align:center;font-size:10.5px;color:#aaa;margin-top:10px;line-height:1.7;}
+.r-footer{text-align:center;font-size:16px;font-weight:400;color:#888;margin-top:4px;letter-spacing:1px;}
+.r-deco{text-align:center;font-size:13px;color:#bbb;margin:3px 0;letter-spacing:2px;}
+
+/* RTE */
+.rte-wrap{position:relative;margin-bottom:12px;}
+.rte-toolbar{display:flex;flex-wrap:wrap;gap:3px;padding:5px 7px;background:var(--surface3);border:1px solid var(--border2);border-radius:7px 7px 0 0;border-bottom:none;}
+.rte-btn{width:27px;height:25px;background:transparent;border:none;color:var(--text2);cursor:pointer;border-radius:4px;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-family:'Prompt',sans-serif;}
+.rte-btn:hover{background:var(--border2);color:var(--text);}
+.rte-sep{width:1px;height:18px;background:var(--border2);margin:2px 2px;align-self:center;}
+.rte-content{width:100%;min-height:64px;background:var(--surface2);border:1px solid var(--border2);border-radius:0 0 7px 7px;color:var(--text);padding:9px 13px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:300;outline:none;line-height:1.7;}
+.rte-content:focus{border-color:var(--accent);}
+.rte-content[contenteditable=true]:empty:before{content:attr(data-ph);color:var(--text3);pointer-events:none;}
+.rte-select{height:25px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);border-radius:4px;font-family:'Prompt',sans-serif;font-size:11px;padding:0 5px;cursor:pointer;outline:none;}
+
+/* MOBILE */
+@media(max-width:760px){
+  .r-wrap{flex-direction:column;}
+  .r-form{width:100%;min-width:unset;min-height:unset;}
+  .r-preview{padding:20px 10px 60px;}
+  .two,.three{grid-template-columns:1fr;}
+}
+/* PRINT */
+@media print{
+  .nav,.r-form,.preview-lbl,.page#page-settings{display:none!important;}
+  body,html{background:#fff!important;}
+  body::before,body::after{display:none!important;}
+  .r-preview{padding:0!important;background:#fff!important;}
+  .receipt{box-shadow:none;}
+  .page{display:block!important;padding-top:0!important;}
+  #page-receipt{display:block!important;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-spacer"></div>
+  <button class="nav-tab off" id="btn-s" onclick="showPage('settings')">⚙ ตั้งค่า</button>
+  <button class="nav-tab on"  id="btn-r" onclick="showPage('receipt')">✦ ใบเสร็จ</button>
+  <button class="save-img-btn" onclick="saveImage()">⬇ บันทึกรูป</button>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="สลับธีม">🌙</button>
+</nav>
+
+<!-- ════ SETTINGS ════ -->
+<div class="page" id="page-settings">
+<div class="settings-wrap">
+
+  <div class="s-section">
+    <div class="s-title">ข้อมูลร้าน</div>
+    <label>ชื่อร้าน</label>
+    <input type="text" id="s-shopName" placeholder="เช่น ร้านทุ่งกระดาษ">
+    <div class="two">
+      <div><label>เบอร์โทร</label><input type="tel" id="s-shopPhone" placeholder="0xx-xxx-xxxx"></div>
+      <div><label>ชื่อแบรนด์ (ใต้ชื่อร้าน)</label><input type="text" id="s-brandName" placeholder="เช่น Thungkradas"></div>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-title">โลโก้ร้าน</div>
+    <div class="upload-zone" onclick="document.getElementById('logoFile').click()">
+      <input type="file" id="logoFile" accept="image/*" onchange="handleUpload('logo',event)">
+      <div class="uico">🖼</div>
+      <p>คลิกเพื่อเลือกรูปโลโก้<br><span style="font-size:10px;opacity:0.6">PNG / JPG — บันทึกในเครื่องถาวร</span></p>
+    </div>
+    <div class="img-preview-wrap"><img id="logoPreview"></div>
+    <button class="clear-img-btn" id="clearLogoBtn" onclick="clearImg('logo')">✕ ลบโลโก้</button>
+  </div>
+
+  <div class="s-section">
+    <div class="s-title">QR โอนเงิน</div>
+    <div class="upload-zone" onclick="document.getElementById('qrFile').click()">
+      <input type="file" id="qrFile" accept="image/*" onchange="handleUpload('qr',event)">
+      <div class="uico">📲</div>
+      <p>คลิกเพื่อเลือกรูป QR Code<br><span style="font-size:10px;opacity:0.6">อัปครั้งเดียว — จำไว้ในเครื่องถาวร</span></p>
+    </div>
+    <div class="img-preview-wrap"><img id="qrPreview"></div>
+    <button class="clear-img-btn" id="clearQrBtn" onclick="clearImg('qr')">✕ ลบ QR</button>
+    <label>ชื่อบัญชี / วอลเล็ต</label>
+    <div class="rte-wrap">
+      <div class="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold','rte-walletName')"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic','rte-walletName')"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline','rte-walletName')"><u>U</u></button>
+        <button class="rte-btn" onclick="rteCmd('strikeThrough','rte-walletName')"><s>S</s></button>
+        <div class="rte-sep"></div>
+        <select class="rte-select" onchange="rteSize(this.value,'rte-walletName');this.value=''">
+          <option value="">ขนาด</option>
+          <option value="1">xs</option><option value="2">sm</option>
+          <option value="3">md</option><option value="4">lg</option><option value="5">xl</option>
+        </select>
+      </div>
+      <div class="rte-content" id="rte-walletName" contenteditable="true"
+        data-ph="เช่น True Money Wallet"
+        oninput="S.rte_walletName=this.innerHTML;renderReceipt()" style="min-height:40px;"></div>
+    </div>
+    <label>เลขบัญชี</label>
+    <div class="rte-wrap">
+      <div class="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold','rte-walletNo')"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic','rte-walletNo')"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline','rte-walletNo')"><u>U</u></button>
+        <button class="rte-btn" onclick="rteCmd('strikeThrough','rte-walletNo')"><s>S</s></button>
+        <div class="rte-sep"></div>
+        <select class="rte-select" onchange="rteSize(this.value,'rte-walletNo');this.value=''">
+          <option value="">ขนาด</option>
+          <option value="1">xs</option><option value="2">sm</option>
+          <option value="3">md</option><option value="4">lg</option><option value="5">xl</option>
+        </select>
+      </div>
+      <div class="rte-content" id="rte-walletNo" contenteditable="true"
+        data-ph="เช่น 0000-000-0000"
+        oninput="S.rte_walletNo=this.innerHTML;renderReceipt()" style="min-height:40px;"></div>
+    </div>
+    <label>หมายเหตุอื่น ๆ</label>
+    <div class="rte-wrap">
+      <div class="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold','rte-fee')"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic','rte-fee')"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline','rte-fee')"><u>U</u></button>
+        <button class="rte-btn" onclick="rteCmd('strikeThrough','rte-fee')"><s>S</s></button>
+        <div class="rte-sep"></div>
+        <select class="rte-select" onchange="rteSize(this.value,'rte-fee');this.value=''">
+          <option value="">ขนาด</option>
+          <option value="1">xs</option><option value="2">sm</option>
+          <option value="3">md</option><option value="4">lg</option><option value="5">xl</option>
+        </select>
+      </div>
+      <div class="rte-content" id="rte-fee" contenteditable="true"
+        data-ph="เช่น หากยอดมากกว่า 200 บาท มีค่าธรรมเนียมแยก 10 บาท"
+        oninput="S.rte_fee=this.innerHTML;renderReceipt()" style="min-height:44px;"></div>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-title">สีตัวอักษรในใบเสร็จ</div>
+    <div class="three">
+      <div><div class="color-row"><label>ชื่อร้าน</label><input type="color" id="c-shopName" value="#111111" oninput="applyColors()"></div></div>
+      <div><div class="color-row"><label>แบรนด์</label><input type="color" id="c-brand" value="#888888" oninput="applyColors()"></div></div>
+      <div><div class="color-row"><label>ชื่อลูกค้า</label><input type="color" id="c-custName" value="#111111" oninput="applyColors()"></div></div>
+    </div>
+    <div class="three">
+      <div><div class="color-row"><label>ยอดรวม</label><input type="color" id="c-grand" value="#111111" oninput="applyColors()"></div></div>
+      <div><div class="color-row"><label>Disclaimer</label><input type="color" id="c-disc" value="#aaaaaa" oninput="applyColors()"></div></div>
+      <div><div class="color-row"><label>Footer</label><input type="color" id="c-footer" value="#888888" oninput="applyColors()"></div></div>
+    </div>
+    <div class="three">
+      <div><div class="color-row"><label>วอลเล็ต</label><input type="color" id="c-wallet" value="#333333" oninput="applyColors()"></div></div>
+      <div><div class="color-row"><label>สินค้า</label><input type="color" id="c-item" value="#333333" oninput="applyColors()"></div></div>
+      <div><div class="color-row"><label>เส้น</label><input type="color" id="c-divider" value="#e0e0e0" oninput="applyColors()"></div></div>
+    </div>
+    <button style="width:100%;padding:7px;background:transparent;border:1px solid var(--border2);border-radius:7px;color:var(--text2);font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;margin-top:2px;" onclick="resetColors()">↺ รีเซตสี</button>
+  </div>
+
+  <div class="s-section">
+    <div class="s-title">ข้อความ disclaimer</div>
+    <div class="rte-wrap">
+      <div class="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold','rte-disc')"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic','rte-disc')"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline','rte-disc')"><u>U</u></button>
+        <button class="rte-btn" onclick="rteCmd('strikeThrough','rte-disc')"><s>S</s></button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteCmd('justifyCenter','rte-disc')">≡</button>
+        <button class="rte-btn" onclick="rteCmd('justifyLeft','rte-disc')">☰</button>
+        <div class="rte-sep"></div>
+        <select class="rte-select" onchange="rteSize(this.value,'rte-disc');this.value=''">
+          <option value="">ขนาด</option>
+          <option value="1">xs</option><option value="2">sm</option>
+          <option value="3">md</option><option value="4">lg</option><option value="5">xl</option>
+        </select>
+      </div>
+      <div class="rte-content" id="rte-disc" contenteditable="true" data-ph="ข้อความ disclaimer..." oninput="S.rte_disc=this.innerHTML;renderReceipt()"></div>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-title">ข้อความ footer</div>
+    <div class="rte-wrap">
+      <div class="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold','rte-footer')"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic','rte-footer')"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline','rte-footer')"><u>U</u></button>
+        <button class="rte-btn" onclick="rteCmd('strikeThrough','rte-footer')"><s>S</s></button>
+        <div class="rte-sep"></div>
+        <select class="rte-select" onchange="rteSize(this.value,'rte-footer');this.value=''">
+          <option value="">ขนาด</option>
+          <option value="1">xs</option><option value="2">sm</option>
+          <option value="3">md</option><option value="4">lg</option><option value="5">xl</option>
+        </select>
+      </div>
+      <div class="rte-content" id="rte-footer" contenteditable="true" data-ph="เช่น Thank you" oninput="S.rte_footer=this.innerHTML;renderReceipt()"></div>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-title">หมายเหตุเพิ่มเติม</div>
+    <div class="rte-wrap">
+      <div class="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold','rte-extra')"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic','rte-extra')"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline','rte-extra')"><u>U</u></button>
+        <button class="rte-btn" onclick="rteCmd('strikeThrough','rte-extra')"><s>S</s></button>
+      </div>
+      <div class="rte-content" id="rte-extra" contenteditable="true" data-ph="หมายเหตุเพิ่มเติม..." oninput="S.rte_extra=this.innerHTML;renderReceipt()"></div>
+    </div>
+  </div>
+
+  <button class="save-btn" onclick="saveSettings()">⸜(˶´ ˘ `˶)⸝ บันทึกการตั้งค่า</button>
+  <div class="save-ok" id="saveOk">★ บันทึกแล้ว</div>
+</div>
+</div>
+
+<!-- ════ RECEIPT ════ -->
+<div class="page on" id="page-receipt">
+<div class="r-wrap">
+  <div class="r-form">
+    <div class="r-form-section">
+      <div class="r-section-title">ข้อมูลลูกค้า</div>
+      <label>ชื่อลูกค้า</label>
+      <input type="text" id="r-cust" placeholder="เช่น คุณสมชาย" oninput="renderReceipt()">
+      <div class="two">
+        <div><label>เลขที่ใบเสร็จ</label><input type="text" id="r-inv" placeholder="INV-001" oninput="renderReceipt()"></div>
+        <div><label>วันที่</label><input type="date" id="r-date" oninput="renderReceipt()"></div>
+      </div>
+    </div>
+    <div class="r-form-section">
+      <div class="r-section-title">รายการสินค้า / บริการ</div>
+      <div class="items-list" id="itemsList"></div>
+      <button class="add-btn" onclick="addItem()">＋ เพิ่มรายการ</button>
+    </div>
+    <div class="r-form-section">
+      <div class="r-section-title">ส่วนลด / ภาษี</div>
+      <div class="two">
+        <div><label>ส่วนลด (฿)</label><input type="number" id="r-disc" placeholder="0" min="0" oninput="renderReceipt()"></div>
+        <div><label>VAT (%)</label><input type="number" id="r-vat" placeholder="0" min="0" max="100" oninput="renderReceipt()"></div>
+      </div>
+    </div>
+    <div class="r-form-section">
+      <div class="r-section-title">QR &amp; บัญชี</div>
+      <div class="qr-toggle-row" onclick="toggleQR()">
+        <span class="qr-toggle-label" id="qrToggleLabel">แสดง QR และข้อมูลการโอน</span>
+        <div class="toggle-switch active" id="qrToggleSwitch"></div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetReceipt()">↺ ล้างข้อมูลใบนี้</button>
+  </div>
+
+  <div class="r-preview">
+    <div class="r-preview-wrap">
+      <div class="preview-lbl">✦ preview ✦</div>
+      <div class="receipt" id="theReceipt">
+        <div class="rh">
+          <img id="r-logo" class="rh-logo" alt="Logo">
+          <div class="rh-name" id="r-shopName">ชื่อร้านของคุณ</div>
+          <div class="rh-brand" id="r-brandName"></div>
+          <div class="rh-phone" id="r-phone" style="display:none"></div>
+        </div>
+        <hr class="rdiv">
+        <div class="rmeta" id="r-invRow" style="display:none"><span>เลขที่ใบเสร็จ</span><span id="r-invDisp"></span></div>
+        <div class="rmeta"><span>วันที่</span><span id="r-dateDisp">—</span></div>
+        <hr class="rdiv">
+        <div class="r-disclaimer" id="r-discDisp"></div>
+        <hr class="rdiv" id="r-discDivider" style="display:none">
+        <div class="r-cust-lbl">♡</div>
+        <div class="r-cust-name" id="r-custDisp">—</div>
+        <table class="r-table">
+          <thead><tr><th>รายการ</th><th style="text-align:right">ราคา</th></tr></thead>
+          <tbody id="r-tbody"><tr><td colspan="2" style="text-align:center;color:#ccc;padding:12px 0;font-size:11px;">ยังไม่มีรายการ (˶◜ᵕ◝˶)</td></tr></tbody>
+        </table>
+        <div class="r-totals" id="r-totals"><div class="r-trow grand"><span>ยอดรวมทั้งสิ้น</span><span>฿0.00</span></div></div>
+        <div id="r-qrBlock">
+          <div class="r-qr-block" id="r-qrOn" style="display:none">
+            <div class="r-qr-lbl">Scan QR for payment</div>
+            <img id="r-qrImg" class="r-qr-img" src="" alt="QR">
+            <div class="r-qr-info"><div class="r-wallet" id="r-walletOn"></div><div id="r-walletNoOn"></div><div class="r-fee" id="r-feeOn"></div></div>
+          </div>
+          <div class="r-qr-block" id="r-qrOff" style="display:none">
+            <div class="r-qr-lbl">Scan QR for payment</div>
+            <div class="r-qr-ph"><span style="font-size:20px">📲</span><span>อัปใน ตั้งค่า</span></div>
+            <div class="r-qr-info"><div class="r-wallet" id="r-walletOff"></div><div id="r-walletNoOff"></div><div class="r-fee" id="r-feeOff"></div></div>
+          </div>
+        </div>
+        <div class="r-note" id="r-extraDisp" style="display:none"></div>
+        <hr class="rdiv" style="margin-top:13px">
+        <div class="r-footer" id="r-footerDisp">Thank you</div>
+        <div style="text-align:center;font-size:3pt;color:#e8e8e8;margin-top:6px;font-weight:300;letter-spacing:0.5px;">template by thungkradas</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+// ── STATE ──
+let items=[], S={}, showQR=true;
+let imgStore={logo:'', qr:''};
+
+const DC={shopName:'#111111',brand:'#888888',custName:'#111111',grand:'#111111',disc:'#aaaaaa',footer:'#888888',wallet:'#333333',item:'#333333',divider:'#e0e0e0'};
+let _gc='#111',_ic='#333';
+
+// ── INDEXEDDB ──
+let db;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open('tkg_imgs',1);
+    req.onupgradeneeded=e=>e.target.result.createObjectStore('imgs');
+    req.onsuccess=e=>{db=e.target.result;res(db);};
+    req.onerror=rej;
+  });
+}
+function dbPut(key,val){return new Promise((res,rej)=>{const tx=db.transaction('imgs','readwrite');tx.objectStore('imgs').put(val,key);tx.oncomplete=res;tx.onerror=rej;});}
+function dbGet(key){return new Promise((res,rej)=>{const tx=db.transaction('imgs','readonly');const req=tx.objectStore('imgs').get(key);req.onsuccess=()=>res(req.result);req.onerror=rej;});}
+function dbDel(key){return new Promise((res,rej)=>{const tx=db.transaction('imgs','readwrite');tx.objectStore('imgs').delete(key);tx.oncomplete=res;tx.onerror=rej;});}
+
+// ── INIT ──
+window.onload=async()=>{
+  await openDB();
+  loadSettings();
+  // load stored images
+  const logo=await dbGet('logo');
+  if(logo){imgStore.logo=logo;showImgPreview('logo',logo);}
+  const qr=await dbGet('qr');
+  if(qr){imgStore.qr=qr;showImgPreview('qr',qr);}
+  document.getElementById('r-date').value=new Date().toISOString().split('T')[0];
+  addItem(); renderReceipt(); applyColors();
+  // theme
+  const t=localStorage.getItem('tkg_theme')||'dark';
+  setTheme(t);
+};
+
+// ── THEME ──
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  setTheme(cur==='dark'?'light':'dark');
+}
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+  localStorage.setItem('tkg_theme',t);
+}
+
+// ── IMAGE UPLOAD (IndexedDB) ──
+function handleUpload(key,e){
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    const data=ev.target.result;
+    imgStore[key]=data;
+    await dbPut(key,data);
+    showImgPreview(key,data);
+    renderReceipt();
+  };
+  reader.readAsDataURL(f);
+}
+function showImgPreview(key,data){
+  const img=document.getElementById(key+'Preview');
+  const btn=document.getElementById('clear'+key.charAt(0).toUpperCase()+key.slice(1)+'Btn');
+  img.src=data; img.style.display='block';
+  btn.style.display='block';
+}
+async function clearImg(key){
+  imgStore[key]='';
+  await dbDel(key);
+  const img=document.getElementById(key+'Preview');
+  const btn=document.getElementById('clear'+key.charAt(0).toUpperCase()+key.slice(1)+'Btn');
+  img.src=''; img.style.display='none'; btn.style.display='none';
+  document.getElementById(key+'File').value='';
+  renderReceipt();
+}
+
+// ── SAVE IMAGE ──
+function saveImage(){
+  const el=document.getElementById('theReceipt');
+  html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true,allowTaint:true}).then(canvas=>{
+    const a=document.createElement('a');
+    a.download='receipt.png'; a.href=canvas.toDataURL('image/png'); a.click();
+  });
+}
+
+// ── PAGES ──
+function showPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('on'));
+  document.getElementById('page-'+p).classList.add('on');
+  document.getElementById('btn-s').className='nav-tab '+(p==='settings'?'on':'off');
+  document.getElementById('btn-r').className='nav-tab '+(p==='receipt'?'on':'off');
+  if(p==='receipt') renderReceipt();
+}
+
+// ── RTE ──
+function rteCmd(cmd,id){document.getElementById(id).focus();document.execCommand(cmd,false,null);}
+function rteSize(val,id){if(!val)return;document.getElementById(id).focus();document.execCommand('fontSize',false,val);}
+
+// ── QR TOGGLE ──
+function toggleQR(){
+  showQR=!showQR;
+  document.getElementById('qrToggleSwitch').classList.toggle('active',showQR);
+  document.getElementById('qrToggleLabel').textContent=showQR?'แสดง QR และข้อมูลการโอน':'ซ่อน QR และข้อมูลการโอน';
+  renderReceipt();
+}
+
+// ── COLORS ──
+function applyColors(){
+  const c={};
+  Object.keys(DC).forEach(k=>{const el=document.getElementById('c-'+k);c[k]=el?el.value:DC[k];});
+  S.colors=c; _gc=c.grand; _ic=c.item;
+  const r=(id,col)=>{const el=document.getElementById(id);if(el)el.style.color=col;};
+  r('r-shopName',c.shopName); r('r-brandName',c.brand); r('r-custDisp',c.custName);
+  r('r-discDisp',c.disc); r('r-footerDisp',c.footer);
+  ['r-walletOn','r-walletOff'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.color=c.wallet;});
+  document.querySelectorAll('.rdiv').forEach(el=>el.style.borderTopColor=c.divider);
+}
+function resetColors(){Object.keys(DC).forEach(k=>{const el=document.getElementById('c-'+k);if(el)el.value=DC[k];});applyColors();}
+
+// ── LOAD / SAVE ──
+function loadSettings(){
+  try{S=JSON.parse(localStorage.getItem('tkg_s')||'{}');}catch(e){S={};}
+  document.getElementById('s-shopName').value =S.shopName||'';
+  document.getElementById('s-shopPhone').value=S.shopPhone||'';
+  document.getElementById('s-brandName').value=S.brandName||'';
+  document.getElementById('rte-walletName').innerHTML=S.rte_walletName||'';
+  document.getElementById('rte-walletNo').innerHTML  =S.rte_walletNo  ||'';
+  document.getElementById('rte-fee').innerHTML        =S.rte_fee       ||'';
+  const dd='รบกวนตรวจสอบรายการ ยอด และชื่อบัญชีให้ถูกต้อง<br>หากลูกค้าโอนแล้วจะถือว่ารับทราบและยอมรับเงื่อนไขทั้งหมดแล้ว';
+  document.getElementById('rte-disc').innerHTML  =S.rte_disc  ||dd;
+  document.getElementById('rte-footer').innerHTML=S.rte_footer||'Thank you ❀⸜(˶´ ˘ `˶)⸝❀';
+  document.getElementById('rte-extra').innerHTML =S.rte_extra ||'';
+  if(S.colors){Object.keys(DC).forEach(k=>{const el=document.getElementById('c-'+k);if(el&&S.colors[k])el.value=S.colors[k];});}
+}
+function saveSettings(){
+  S.shopName  =document.getElementById('s-shopName').value;
+  S.shopPhone =document.getElementById('s-shopPhone').value;
+  S.brandName =document.getElementById('s-brandName').value;
+  S.walletName    =document.getElementById('s-walletName')||'';
+  S.walletNo      =document.getElementById('s-walletNo')||'';
+  S.rte_walletName=document.getElementById('rte-walletName').innerHTML;
+  S.rte_walletNo  =document.getElementById('rte-walletNo').innerHTML;
+  S.rte_fee       =document.getElementById('rte-fee').innerHTML;
+  S.rte_disc  =document.getElementById('rte-disc').innerHTML;
+  S.rte_footer=document.getElementById('rte-footer').innerHTML;
+  S.rte_extra =document.getElementById('rte-extra').innerHTML;
+  localStorage.setItem('tkg_s',JSON.stringify(S));
+  const ok=document.getElementById('saveOk');
+  ok.style.display='flex';setTimeout(()=>ok.style.display='none',2500);
+  renderReceipt();applyColors();
+}
+
+// ── ITEMS ──
+function addItem(){items.push({id:Date.now(),name:'',qty:1,price:0});renderItems();}
+function removeItem(id){items=items.filter(i=>i.id!==id);renderItems();renderReceipt();}
+function renderItems(){
+  const list=document.getElementById('itemsList');list.innerHTML='';
+  items.forEach((item,idx)=>{
+    const d=document.createElement('div');d.className='item-card';
+    d.innerHTML=`
+      <button class="rm-btn" onclick="removeItem(${item.id})">✕</button>
+      <input type="text" placeholder="ชื่อสินค้า / บริการ" value="${item.name}" oninput="items[${idx}].name=this.value;renderReceipt()">
+      <div class="two">
+        <div><label>จำนวน</label><input type="number" value="${item.qty}" min="1" oninput="items[${idx}].qty=parseFloat(this.value)||1;renderReceipt()"></div>
+        <div><label>ราคา/หน่วย (฿)</label><input type="number" value="${item.price}" min="0" step="0.01" oninput="items[${idx}].price=parseFloat(this.value)||0;renderReceipt()"></div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+// ── RENDER ──
+function fmtDate(v){
+  if(!v)return'—';
+  const[y,m,d]=v.split('-');
+  return`${d}-${m}-${y.slice(2)}`;
+}
+function fmt(n){return n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function renderReceipt(){
+  const logo=document.getElementById('r-logo');
+  if(imgStore.logo){logo.src=imgStore.logo;logo.style.display='block';}
+  else{logo.src='';logo.style.display='none';}
+
+  document.getElementById('r-shopName').textContent=S.shopName||'ชื่อร้านของคุณ';
+  const bn=document.getElementById('r-brandName');
+  bn.textContent=S.brandName||'';bn.style.display=S.brandName?'block':'none';
+  const ph=document.getElementById('r-phone');
+  ph.textContent=S.shopPhone?'📞 '+S.shopPhone:'';ph.style.display=S.shopPhone?'block':'none';
+
+  const inv=document.getElementById('r-inv').value;
+  document.getElementById('r-invDisp').textContent=inv;
+  document.getElementById('r-invRow').style.display=inv?'flex':'none';
+  document.getElementById('r-dateDisp').textContent=fmtDate(document.getElementById('r-date').value);
+
+  const discHTML=(S.rte_disc||document.getElementById('rte-disc').innerHTML||'').trim();
+  document.getElementById('r-discDisp').innerHTML=discHTML;
+  document.getElementById('r-discDivider').style.display=discHTML?'block':'none';
+  document.getElementById('r-custDisp').textContent=document.getElementById('r-cust').value||'—';
+
+  const discount=parseFloat(document.getElementById('r-disc').value)||0;
+  const vatPct  =parseFloat(document.getElementById('r-vat').value)||0;
+  const subtotal=items.reduce((s,i)=>s+i.qty*i.price,0);
+  const hasItems=items.some(i=>i.name.trim());
+  const tbody=document.getElementById('r-tbody');
+  tbody.innerHTML=hasItems
+    ?items.filter(i=>i.name.trim()).map(i=>`
+        <tr>
+          <td style="color:${_ic}">${i.name}<div class="r-sub">${i.qty} × ฿${fmt(i.price)}</div></td>
+          <td style="color:${_ic}">฿${fmt(i.qty*i.price)}</td>
+        </tr>`).join('')
+    :'<tr><td colspan="2" style="text-align:center;color:#ccc;padding:12px 0;font-size:11px;">ยังไม่มีรายการ (˶◜ᵕ◝˶)</td></tr>';
+
+  const vatAmt=(subtotal-discount)*(vatPct/100);
+  const grand=subtotal-discount+vatAmt;
+  let h='';
+  if(subtotal>0) h+=`<div class="r-trow"><span>ยอดรวม</span><span>฿${fmt(subtotal)}</span></div>`;
+  if(discount>0) h+=`<div class="r-trow"><span>ส่วนลด</span><span style="color:#888">−฿${fmt(discount)}</span></div>`;
+  if(vatPct>0)   h+=`<div class="r-trow"><span>VAT ${vatPct}%</span><span>฿${fmt(vatAmt)}</span></div>`;
+  h+=`<div class="r-trow grand" style="color:${_gc}"><span>ยอดรวมทั้งสิ้น</span><span>฿${fmt(grand)}</span></div>`;
+  document.getElementById('r-totals').innerHTML=h;
+
+  document.getElementById('r-qrBlock').style.display=showQR?'block':'none';
+  if(showQR){
+    const wn  = S.rte_walletName||document.getElementById('rte-walletName').innerHTML||'';
+    const wno = S.rte_walletNo  ||document.getElementById('rte-walletNo').innerHTML  ||'';
+    const feeHTML=S.rte_fee||document.getElementById('rte-fee').innerHTML||'';
+    ['r-walletOn','r-walletOff'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=wn;});
+    ['r-walletNoOn','r-walletNoOff'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=wno;});
+    ['r-feeOn','r-feeOff'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=feeHTML;});
+    if(imgStore.qr){
+      document.getElementById('r-qrOn').style.display='block';
+      document.getElementById('r-qrOff').style.display='none';
+      document.getElementById('r-qrImg').src=imgStore.qr;
+    }else{
+      document.getElementById('r-qrOn').style.display='none';
+      document.getElementById('r-qrOff').style.display='block';
+    }
+  }
+
+  const extraHTML=(S.rte_extra||document.getElementById('rte-extra').innerHTML||'').trim();
+  const extraEl=document.getElementById('r-extraDisp');
+  extraEl.innerHTML=extraHTML;
+  extraEl.style.display=(extraHTML&&extraHTML!=='<br>')?'block':'none';
+
+  document.getElementById('r-footerDisp').innerHTML=(S.rte_footer||document.getElementById('rte-footer').innerHTML||'Thank you').trim();
+  applyColors();
+}
+
+function resetReceipt(){
+  if(!confirm('ล้างข้อมูลใบนี้?'))return;
+  ['r-cust','r-inv','r-disc','r-vat'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r-date').value=new Date().toISOString().split('T')[0];
+  items=[];addItem();renderReceipt();
+}
+</script>
+</body>
+</html>
