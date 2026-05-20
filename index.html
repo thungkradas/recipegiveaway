@@ -195,6 +195,24 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
 .r-preview-wrap{width:100%;max-width:420px;}
 .preview-lbl{text-align:center;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:14px;font-weight:300;}
 
+/* ── BORDER STYLE OPTIONS ── */
+.border-opt{background:var(--surface2);border:2px solid var(--border2);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.border-opt:hover{border-color:var(--accent);}
+.border-opt.active{border-color:var(--accent);background:var(--glow);}
+.border-opt span{font-size:11px;color:var(--text2);display:block;margin-top:5px;}
+.border-preview{height:24px;margin:0 4px;background:transparent;}
+.torn-demo{background:repeating-linear-gradient(90deg,#aaa 0,#aaa 6px,transparent 6px,transparent 12px) top/100% 2px no-repeat,repeating-linear-gradient(90deg,#aaa 0,#aaa 6px,transparent 6px,transparent 12px) bottom/100% 2px no-repeat;}
+.wave-demo{background:radial-gradient(circle at 50% 0%,transparent 4px,#aaa 4px,#aaa 5px,transparent 5px) top/12px 6px repeat-x,radial-gradient(circle at 50% 100%,transparent 4px,#aaa 4px,#aaa 5px,transparent 5px) bottom/12px 6px repeat-x;}
+.zigzag-demo{background:linear-gradient(135deg,#aaa 25%,transparent 25%) -6px 0/12px 6px repeat-x top,linear-gradient(225deg,#aaa 25%,transparent 25%) -6px 0/12px 6px repeat-x top,linear-gradient(315deg,#aaa 25%,transparent 25%) -6px 100%/12px 6px repeat-x bottom,linear-gradient(45deg,#aaa 25%,transparent 25%) -6px 100%/12px 6px repeat-x bottom;}
+
+/* ── RECEIPT EDGES ── */
+.receipt.edge-torn::before{content:'';position:absolute;top:-9px;left:0;right:0;height:18px;background:radial-gradient(circle at 3px 9px,transparent 8px,var(--rbg,#fff) 8px) -3px 0/14px 18px repeat-x;}
+.receipt.edge-torn::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:18px;background:radial-gradient(circle at 3px 9px,transparent 8px,var(--rbg,#fff) 8px) -3px 0/14px 18px repeat-x;transform:scaleY(-1);}
+.receipt.edge-wave::before{content:'';position:absolute;top:-8px;left:0;right:0;height:16px;background:radial-gradient(circle at 50% 100%,transparent 7px,var(--rbg,#fff) 7px) 0 0/16px 16px repeat-x;}
+.receipt.edge-wave::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:16px;background:radial-gradient(circle at 50% 0%,transparent 7px,var(--rbg,#fff) 7px) 0 0/16px 16px repeat-x;}
+.receipt.edge-zigzag::before{content:'';position:absolute;top:-8px;left:0;right:0;height:16px;background:linear-gradient(135deg,var(--rbg,#fff) 33%,transparent 33%) 0 0/16px 16px repeat-x,linear-gradient(225deg,var(--rbg,#fff) 33%,transparent 33%) 0 0/16px 16px repeat-x;}
+.receipt.edge-zigzag::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:16px;background:linear-gradient(315deg,var(--rbg,#fff) 33%,transparent 33%) 0 0/16px 16px repeat-x,linear-gradient(45deg,var(--rbg,#fff) 33%,transparent 33%) 0 0/16px 16px repeat-x;}
+
 .receipt{
   background:#fff;border-radius:4px;
   padding:28px 28px 22px;position:relative;
@@ -396,6 +414,28 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
   </div>
 
   <div class="s-section">
+    <div class="s-title">รูปแบบขอบใบเสร็จ</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="border-opt" id="bopt-none" onclick="setBorder('none')">
+        <div class="border-preview" style="border-top:2px solid #aaa;border-bottom:2px solid #aaa;"></div>
+        <span>ไม่มีขอบ</span>
+      </div>
+      <div class="border-opt" id="bopt-torn" onclick="setBorder('torn')">
+        <div class="border-preview torn-demo"></div>
+        <span>ฉีก</span>
+      </div>
+      <div class="border-opt" id="bopt-wave" onclick="setBorder('wave')">
+        <div class="border-preview wave-demo"></div>
+        <span>คลื่น</span>
+      </div>
+      <div class="border-opt" id="bopt-zigzag" onclick="setBorder('zigzag')">
+        <div class="border-preview zigzag-demo"></div>
+        <span>หยัก</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-section">
     <div class="s-title">ข้อความ disclaimer</div>
     <div class="rte-wrap">
       <div class="rte-toolbar">
@@ -536,6 +576,20 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+// ── BORDER STYLE ──
+let currentBorder='none';
+function setBorder(style){
+  currentBorder=style;
+  const receipt=document.getElementById('theReceipt');
+  receipt.classList.remove('edge-torn','edge-wave','edge-zigzag');
+  if(style!=='none') receipt.classList.add('edge-'+style);
+  document.querySelectorAll('.border-opt').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('bopt-'+style);if(el)el.classList.add('active');
+  S.borderStyle=style;
+  const bg=document.getElementById('c-receiptbg')?.value||'#ffffff';
+  receipt.style.setProperty('--rbg',bg);
+}
+
 let items=[], S={}, showQR=true;
 let imgStore={logo:'', qr:''};
 
@@ -655,7 +709,7 @@ function applyColors(){
   document.querySelectorAll('.r-fee').forEach(el=>el.style.color=c.fee);
   const extraEl=document.getElementById('r-extraDisp');if(extraEl)extraEl.style.color=c.extra;
   document.querySelectorAll('.r-qr-lbl').forEach(el=>el.style.color=c.qrlbl);
-  const receipt=document.getElementById('theReceipt');if(receipt)receipt.style.background=c.receiptbg;
+  const receipt=document.getElementById('theReceipt');if(receipt){receipt.style.background=c.receiptbg;receipt.style.setProperty('--rbg',c.receiptbg);}
 }
 function resetColors(){Object.keys(DC).forEach(k=>{const el=document.getElementById('c-'+k);if(el)el.value=DC[k];});applyColors();}
 
@@ -673,6 +727,8 @@ function loadSettings(){
   document.getElementById('rte-footer').innerHTML=S.rte_footer||'Thank you ❀⸜(˶´ ˘ `˶)⸝❀';
   document.getElementById('rte-extra').innerHTML =S.rte_extra ||'';
   if(S.colors){Object.keys(DC).forEach(k=>{const el=document.getElementById('c-'+k);if(el&&S.colors[k])el.value=S.colors[k];});}
+  if(S.borderStyle) setTimeout(()=>setBorder(S.borderStyle),100);
+  else setBorder('none');
 }
 function saveSettings(){
   S.shopName  =document.getElementById('s-shopName').value;
