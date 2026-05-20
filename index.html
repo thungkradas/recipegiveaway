@@ -204,7 +204,7 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
   font-family:'Prompt',sans-serif;font-weight:300;
 }
 .rh{text-align:center;margin-bottom:16px;}
-.rh-logo{max-height:80px;max-width:200px;object-fit:contain;margin-bottom:8px;display:none;}
+.rh-logo{max-height:80px;max-width:200px;object-fit:contain;margin:0 auto 8px;display:none;}
 .rh-name{font-size:22px;font-weight:600;line-height:1.2;}
 .rh-brand{font-size:11px;font-weight:400;letter-spacing:1.5px;margin-top:2px;}
 .rh-phone{font-size:11px;color:#aaa;margin-top:2px;}
@@ -225,7 +225,7 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
 .r-trow.grand{font-size:18px;font-weight:600;padding:9px 0 4px;border-top:2px solid #eee;margin-top:4px;}
 .r-qr-block{text-align:center;margin-top:14px;padding-top:12px;border-top:1px dashed #e0e0e0;}
 .r-qr-lbl{font-size:11px;font-weight:400;color:#666;margin-bottom:8px;}
-.r-qr-img{max-width:148px;border-radius:8px;border:4px solid #fff;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
+.r-qr-img{max-width:148px;border-radius:8px;border:4px solid #fff;box-shadow:0 3px 12px rgba(0,0,0,0.1);opacity:0.75;}
 .r-qr-ph{width:120px;height:120px;background:#f9f9f9;border:1.5px dashed #ddd;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#ccc;flex-direction:column;gap:4px;}
 .r-qr-info{margin-top:8px;font-size:11.5px;color:#555;line-height:1.8;font-weight:300;}
 .r-wallet{font-weight:500;font-size:13px;}
@@ -262,9 +262,12 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
   .page{display:block!important;padding-top:0!important;}
   #page-receipt{display:block!important;}
 }
+/* ── PASSWORD SCREEN ── */
 </style>
 </head>
 <body>
+
+
 
 <nav class="nav">
   <div class="nav-spacer"></div>
@@ -525,7 +528,6 @@ textarea{resize:vertical;min-height:56px;line-height:1.6;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-// ── STATE ──
 let items=[], S={}, showQR=true;
 let imgStore={logo:'', qr:''};
 
